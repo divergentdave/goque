@@ -72,7 +72,7 @@ func (s *Stack) Push(value []byte) (*Item, error) {
 	}
 
 	// Add it to the stack.
-	if err := s.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := s.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -137,7 +137,7 @@ func (s *Stack) Pop() (*Item, error) {
 	}
 
 	// Remove this item from the stack.
-	if err := s.db.Delete(item.Key, nil); err != nil {
+	if err := s.db.Delete(item.Key, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -210,7 +210,7 @@ func (s *Stack) Update(id uint64, newValue []byte) (*Item, error) {
 	}
 
 	// Update this item in the stack.
-	if err := s.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := s.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 

@@ -94,7 +94,7 @@ func (pq *PrefixQueue) Enqueue(prefix, value []byte) (*Item, error) {
 	}
 
 	// Add it to the queue.
-	if err := pq.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := pq.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -176,7 +176,7 @@ func (pq *PrefixQueue) Dequeue(prefix []byte) (*Item, error) {
 	}
 
 	// Remove this item from the queue.
-	if err := pq.db.Delete(item.Key, nil); err != nil {
+	if err := pq.db.Delete(item.Key, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -276,7 +276,7 @@ func (pq *PrefixQueue) Update(prefix []byte, id uint64, newValue []byte) (*Item,
 	}
 
 	// Update this item in the queue.
-	if err := pq.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := pq.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -401,14 +401,14 @@ func (pq *PrefixQueue) saveQueue(prefix []byte, q *queue) error {
 	}
 
 	// Save it to the database.
-	return pq.db.Put(generateKeyPrefixData(prefix), buffer.Bytes(), nil)
+	return pq.db.Put(generateKeyPrefixData(prefix), buffer.Bytes(), &writeOptionsFlush)
 }
 
 // save saves the main prefix queue data.
 func (pq *PrefixQueue) save() error {
 	val := make([]byte, 8)
 	binary.BigEndian.PutUint64(val, pq.size)
-	return pq.db.Put(pq.getDataKey(), val, nil)
+	return pq.db.Put(pq.getDataKey(), val, &writeOptionsFlush)
 }
 
 // getDataKey generates the main prefix queue data key.

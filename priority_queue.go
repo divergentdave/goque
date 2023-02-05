@@ -103,7 +103,7 @@ func (pq *PriorityQueue) Enqueue(priority uint8, value []byte) (*PriorityItem, e
 	}
 
 	// Add it to the priority queue.
-	if err := pq.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := pq.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -173,7 +173,7 @@ func (pq *PriorityQueue) Dequeue() (*PriorityItem, error) {
 	}
 
 	// Remove this item from the priority queue.
-	if err = pq.db.Delete(item.Key, nil); err != nil {
+	if err = pq.db.Delete(item.Key, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -201,7 +201,7 @@ func (pq *PriorityQueue) DequeueByPriority(priority uint8) (*PriorityItem, error
 	}
 
 	// Remove this item from the priority queue.
-	if err = pq.db.Delete(item.Key, nil); err != nil {
+	if err = pq.db.Delete(item.Key, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -287,7 +287,7 @@ func (pq *PriorityQueue) Update(priority uint8, id uint64, newValue []byte) (*Pr
 	}
 
 	// Update this item in the queue.
-	if err := pq.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := pq.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 

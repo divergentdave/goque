@@ -72,7 +72,7 @@ func (q *Queue) Enqueue(value []byte) (*Item, error) {
 	}
 
 	// Add it to the queue.
-	if err := q.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := q.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -137,7 +137,7 @@ func (q *Queue) Dequeue() (*Item, error) {
 	}
 
 	// Remove this item from the queue.
-	if err := q.db.Delete(item.Key, nil); err != nil {
+	if err := q.db.Delete(item.Key, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
@@ -210,7 +210,7 @@ func (q *Queue) Update(id uint64, newValue []byte) (*Item, error) {
 	}
 
 	// Update this item in the queue.
-	if err := q.db.Put(item.Key, item.Value, nil); err != nil {
+	if err := q.db.Put(item.Key, item.Value, &writeOptionsFlush); err != nil {
 		return nil, err
 	}
 
